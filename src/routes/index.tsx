@@ -223,3 +223,141 @@ function Compare({ label, l1, l2 }: { label: string; l1: string; l2: string }) {
     </div>
   );
 }
+
+type BentoTone = "default" | "primary" | "secondary";
+function BentoCard({
+  className = "",
+  eyebrow,
+  title,
+  body,
+  icon: Icon,
+  href,
+  cta,
+  tone = "default",
+  children,
+}: {
+  className?: string;
+  eyebrow: string;
+  title: string;
+  body: string;
+  icon?: typeof Wallet;
+  href?: string;
+  cta?: string;
+  tone?: BentoTone;
+  children?: React.ReactNode;
+}) {
+  const bg =
+    tone === "primary"
+      ? "bg-gradient-to-br from-primary/15 via-card to-card border-primary/30"
+      : tone === "secondary"
+        ? "bg-gradient-to-br from-secondary/15 via-card to-card border-secondary/30"
+        : "bg-card";
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.4 }}
+      className={`group relative flex flex-col justify-between overflow-hidden rounded-3xl border p-6 sm:p-8 transition-all hover:-translate-y-0.5 ${bg} ${className}`}
+    >
+      <div>
+        <div className="flex items-center justify-between">
+          <div className="eyebrow">{eyebrow}</div>
+          {Icon && (
+            <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-foreground/5">
+              <Icon className="h-4 w-4 text-foreground/80" />
+            </div>
+          )}
+        </div>
+        <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h3>
+        <p className="mt-2 max-w-md text-sm text-muted-foreground sm:text-base">{body}</p>
+      </div>
+      {children && <div className="mt-6">{children}</div>}
+      {href && cta && (
+        <Link
+          to={href}
+          className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:gap-2 transition-all"
+        >
+          {cta} <ArrowUpRight className="h-4 w-4" />
+        </Link>
+      )}
+    </motion.div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="mt-4 flex items-baseline gap-3">
+      <span className="font-display text-4xl font-bold text-foreground sm:text-5xl">{value}</span>
+      <span className="text-xs text-muted-foreground">{label}</span>
+    </div>
+  );
+}
+
+function MiniBar({ label, value, width, tone }: { label: string; value: string; width: string; tone: "primary" | "muted" }) {
+  return (
+    <div>
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
+        <span>{label}</span>
+        <span className="font-mono">{value}</span>
+      </div>
+      <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-foreground/5">
+        <div
+          className={`h-full rounded-full ${tone === "primary" ? "bg-primary" : "bg-muted-foreground/50"}`}
+          style={{ width }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function MarketVisual() {
+  const rows = [
+    { name: "BTC", price: "$67,240", ch: "+2.14%", up: true },
+    { name: "ETH", price: "$3,482", ch: "+1.02%", up: true },
+    { name: "ARB", price: "$0.821", ch: "-0.45%", up: false },
+    { name: "SOL", price: "$174.20", ch: "+3.87%", up: true },
+  ];
+  return (
+    <div className="rounded-2xl border border-border/60 bg-background/60 p-4 backdrop-blur">
+      <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground">
+        <span className="inline-flex items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
+          Live feed
+        </span>
+        <span className="font-mono">CoinGecko · 45s</span>
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        {rows.map((r) => (
+          <div key={r.name} className="rounded-xl bg-foreground/5 p-3">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-semibold">{r.name}</span>
+              <span className={`font-mono ${r.up ? "text-success" : "text-destructive"}`}>{r.ch}</span>
+            </div>
+            <div className="mt-1 font-mono text-sm font-semibold">{r.price}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function HashVisual() {
+  return (
+    <div className="rounded-2xl border border-border/60 bg-background/60 p-4 font-mono text-xs backdrop-blur">
+      <div className="flex items-center justify-between text-muted-foreground">
+        <span className="eyebrow">Block #2</span>
+        <span className="inline-flex items-center gap-1.5 text-success">
+          <Layers className="h-3 w-3" /> Valid
+        </span>
+      </div>
+      <div className="mt-3 space-y-1.5">
+        <div className="truncate text-secondary">000a4f2b91e7d3c85b6a2f19d8e0c47a5b3f6...</div>
+        <div className="truncate text-muted-foreground">nonce · 48,271</div>
+        <div className="h-px bg-border/60" />
+        <div className="truncate text-primary">0009c1de8ab72f45e63d9c1a7b40e2f8c5d3...</div>
+      </div>
+    </div>
+  );
+}
+
