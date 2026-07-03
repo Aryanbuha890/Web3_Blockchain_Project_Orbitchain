@@ -80,35 +80,102 @@ function MissionHQ() {
         <p className="mt-3 text-xs text-muted-foreground">Illustrative telemetry · simulation feed</p>
       </section>
 
-      {/* Modules */}
+      {/* Bento — Apple-style */}
       <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
         <div className="max-w-2xl">
           <div className="eyebrow">Mission Modules</div>
-          <h2 className="mt-2 text-3xl font-bold sm:text-4xl">Every subsystem, one console.</h2>
-          <p className="mt-3 text-muted-foreground">
-            Compose your operating picture from focused modules. Each speaks a common protocol
-            so operators can pivot from ledger settlement to hash telemetry in a single glance.
+          <h2 className="mt-2 font-display text-4xl font-bold tracking-tight sm:text-5xl">
+            Every subsystem.<br />
+            <span className="text-muted-foreground">One console.</span>
+          </h2>
+          <p className="mt-4 max-w-xl text-muted-foreground">
+            Purpose-built modules that snap together into a single operating picture — from
+            wallet custody to market telemetry to on-chain block production.
           </p>
         </div>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {modules.map((m, i) => (
-            <motion.div
-              key={m.title}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.35, delay: i * 0.05 }}
-              className="surface group p-6 transition-all hover:-translate-y-0.5 hover:border-primary/40"
-            >
-              <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <m.icon className="h-5 w-5" />
-              </div>
-              <h3 className="mt-4 text-lg font-semibold">{m.title}</h3>
-              <p className="mt-1.5 text-sm text-muted-foreground">{m.desc}</p>
-            </motion.div>
-          ))}
+
+        <div className="mt-12 grid gap-4 md:grid-cols-6 md:grid-rows-[repeat(4,minmax(160px,auto))]">
+          {/* Feature: Mission Control */}
+          <BentoCard
+            className="md:col-span-4 md:row-span-2"
+            eyebrow="Mission Control"
+            title="Live markets, one glance."
+            body="Streaming price feeds from Bitcoin, Ethereum, Arbitrum and Solana refresh every 45 seconds — with charts, top movers, and gas comparisons for every colony's operator."
+            href="/mission-control"
+            cta="Open dashboard"
+            tone="primary"
+          >
+            <MarketVisual />
+          </BentoCard>
+
+          {/* Ethereum */}
+          <BentoCard
+            className="md:col-span-2 md:row-span-2"
+            eyebrow="Layer 1"
+            title="Ethereum settles."
+            body="Global consensus, cryptographic finality — the base layer every colony trusts."
+            icon={Globe}
+          >
+            <Stat label="Validators securing L1" value="1M+" />
+          </BentoCard>
+
+          {/* Arbitrum */}
+          <BentoCard
+            className="md:col-span-2 md:row-span-2"
+            eyebrow="Layer 2"
+            title="Arbitrum scales."
+            body="Rollups batch thousands of transactions off-chain and post one proof back to Ethereum."
+            icon={Zap}
+          >
+            <div className="mt-4 space-y-2">
+              <MiniBar label="L1 fee" value="$3.20" width="100%" tone="muted" />
+              <MiniBar label="L2 fee" value="$0.04" width="14%" tone="primary" />
+            </div>
+          </BentoCard>
+
+          {/* Mining Reactor - large feature */}
+          <BentoCard
+            className="md:col-span-4 md:row-span-2"
+            eyebrow="Mining Reactor"
+            title="Real SHA-256, in your browser."
+            body="Mine chained blocks with the Web Crypto API, adjust difficulty, and watch the chain break the instant you tamper with history."
+            href="/mining-reactor"
+            cta="Enter reactor"
+            tone="secondary"
+          >
+            <HashVisual />
+          </BentoCard>
+
+          {/* Wallet */}
+          <BentoCard
+            className="md:col-span-2 md:row-span-1"
+            eyebrow="Custody"
+            title="Wallet Satellite"
+            body="Sign transactions offline. Public keys ship. Private keys stay planetside."
+            icon={Wallet}
+          />
+
+          {/* Reliability */}
+          <BentoCard
+            className="md:col-span-2 md:row-span-1"
+            eyebrow="Uptime"
+            title="99.98% synced"
+            body="Cross-colony consensus across 12 orbital nodes, four planetary anchors."
+            icon={ShieldCheck}
+          />
+
+          {/* Perf */}
+          <BentoCard
+            className="md:col-span-2 md:row-span-1"
+            eyebrow="Latency"
+            title="~250ms finality"
+            body="Sub-second confirmations on Arbitrum — before the next radar sweep."
+            icon={Gauge}
+          />
         </div>
       </section>
+
+
 
       {/* Why Layer 2 */}
       <section className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">
