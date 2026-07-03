@@ -1,12 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, Rocket, Wallet, Globe, Zap, Cpu, Radar, ArrowUpRight,
-  ShieldCheck, Gauge, Layers,
+  ShieldCheck, Gauge, Layers, PlayCircle, Bot, Trophy, Coins,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { Starfield } from "@/components/Starfield";
 import { StatCounter } from "@/components/StatCounter";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -22,48 +24,237 @@ export const Route = createFileRoute("/")({
   component: MissionHQ,
 });
 
+const faqData = [
+  {
+    question: "What is OrbitChain?",
+    answer: "OrbitChain is a real-time visualization and monitoring telemetry surface for interplanetary and terrestrial Web3 networks, integrating consensus state trackers, ledger validations, and market exchange rates."
+  },
+  {
+    question: "How does the browser-based Mining Reactor simulation work?",
+    answer: "The Mining Reactor utilizes the Web Crypto API to compute real SHA-256 hashes inside your browser. You can configure difficulty thresholds (e.g. difficulty 000 requiring three leading zeros), iterate nonces, and witness how altering block records breaks downstream block consensus in real-time."
+  },
+  {
+    question: "Why unifies Ethereum L1 and Arbitrum L2?",
+    answer: "Ethereum mainnet acts as a highly secure, decentralized settlement layer where blocks are cryptographically finalized. Arbitrum, an optimistic rollup, groups thousands of off-chain transactions, executes them at lightning speeds (~250ms soft finality) and posts compression proofs back to Ethereum, giving L1 security at fractional costs."
+  },
+  {
+    question: "Are off-world validators simulated in the galaxy map?",
+    answer: "Yes, the Galaxy Explorer simulates network parameters across orbital anchors, lunar hubs, and martian colonies, showcasing the effects of astronomical latency (up to several minutes of light-speed travel delay) on interplanetary transactions and block synchronization."
+  }
+];
+
 function MissionHQ() {
+  const [wordIdx, setWordIdx] = useState(0);
+  const rotatingWords = [
+    { text: "Web3 Economy", gradient: "from-cyan-400 to-blue-500 dark:from-cyan-300 dark:to-blue-400" },
+    { text: "Ethereum L1", gradient: "from-emerald-400 to-cyan-500 dark:from-emerald-300 dark:to-cyan-400" },
+    { text: "Arbitrum L2", gradient: "from-blue-400 to-indigo-600 dark:from-blue-300 dark:to-indigo-400" },
+    { text: "Solana Node", gradient: "from-violet-400 to-indigo-500 dark:from-violet-300 dark:to-indigo-400" },
+    { text: "Cosmic Telemetry", gradient: "from-cyan-400 to-indigo-500 dark:from-cyan-300 dark:to-indigo-400" }
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIdx((prev) => (prev + 1) % rotatingWords.length);
+    }, 2800);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <SiteLayout>
       {/* Hero */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden pt-24 pb-12 flex flex-col items-center">
         <Starfield />
-        <div className="relative mx-auto max-w-7xl px-4 pt-24 pb-32 sm:px-6 lg:px-8">
+
+        {/* Scanlines & Grid overlays matching Portmind */}
+        <div className="absolute inset-0 opacity-[0.03] cyber-grid-overlay pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 opacity-[0.02] mix-blend-overlay cyber-scanlines" />
+
+        {/* Ambient backglows */}
+        <div className="pointer-events-none absolute -top-40 left-1/2 h-[620px] w-[1100px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(2,132,199,0.12),transparent)] blur-3xl" />
+        <div className="pointer-events-none absolute top-40 -left-32 h-[420px] w-[420px] rounded-full bg-[radial-gradient(closest-side,rgba(124,58,237,0.08),transparent)] blur-3xl" />
+
+        <div className="relative mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8 text-center flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mx-auto max-w-3xl text-center"
+            className="mx-auto max-w-4xl text-center flex flex-col items-center"
           >
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
+            {/* Status indicator badge */}
+            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3.5 py-1.5 text-xs text-muted-foreground backdrop-blur shadow-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
-              Network status: nominal · 12 colonies online
+              Network Status: Nominal · 12 colonies connected
             </div>
-            <h1 className="mt-6 font-display text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl">
-              Mission control for the{" "}
-              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                interplanetary
-              </span>{" "}
-              Web3 economy.
+
+            {/* Rotating gradient heading */}
+            <h1 className="mt-8 font-display text-4xl font-black leading-[1.1] tracking-tight sm:text-6xl md:text-7xl lg:text-[76px] text-foreground">
+              Mission control for the
+              <br />
+              <span className="relative inline-flex items-center justify-center w-full h-[48px] sm:h-[68px] md:h-[78px] lg:h-[84px] overflow-visible">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={wordIdx}
+                    initial={{ y: 20, opacity: 0, filter: "blur(5px)", rotateX: -60 }}
+                    animate={{ y: 0, opacity: 1, filter: "blur(0px)", rotateX: 0 }}
+                    exit={{ y: -20, opacity: 0, filter: "blur(5px)", rotateX: 60 }}
+                    transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+                    style={{
+                      transformOrigin: "bottom center",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }}
+                    className={`absolute bg-clip-text text-transparent bg-gradient-to-r ${rotatingWords[wordIdx].gradient} font-black pb-2`}
+                  >
+                    {rotatingWords[wordIdx].text}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
+
+            <p className="mx-auto mt-8 max-w-2xl text-base sm:text-lg text-muted-foreground leading-relaxed">
               OrbitChain unifies Ethereum settlement, Arbitrum throughput, and off-world nodes
               into a single telemetry surface. Watch every block, every trade, every colony —
               in real time.
             </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link
-                to="/mission-control"
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.02]"
-              >
-                <Rocket className="h-4 w-4" /> Launch Mission
+
+            {/* Action buttons (Liquid and Space styles) */}
+            <div className="mt-10 flex flex-wrap justify-center gap-6">
+              <Link to="/mission-control" className="btn-liquid">
+                <span className="btn-liquid-inner">
+                  <span className="liquid" />
+                  <span className="bubble bubble-1" />
+                  <span className="bubble bubble-2" />
+                  <span className="bubble bubble-3" />
+                  <span className="btn-liquid-txt">
+                    <span className="boat-container">
+                      <Rocket className="h-4.5 w-4.5 text-primary" />
+                    </span>
+                    Launch Mission
+                    <ArrowRight className="h-4 w-4 shrink-0 relative z-10" />
+                  </span>
+                </span>
               </Link>
-              <Link
-                to="/galaxy"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-semibold text-foreground backdrop-blur hover:bg-card"
-              >
-                Explore Galaxy <ArrowRight className="h-4 w-4" />
+
+              <Link to="/galaxy" className="btn-space">
+                <span className="btn-space-inner">
+                  <span className="btn-space-strong">
+                    <PlayCircle className="h-4.5 w-4.5 shrink-0" />
+                    Explore Galaxy
+                  </span>
+                  <div id="container-stars">
+                    <div id="stars" />
+                  </div>
+                  <div id="glow">
+                    <div className="circle" />
+                    <div className="circle" />
+                  </div>
+                </span>
               </Link>
+            </div>
+
+            {/* HUD Status Widgets */}
+            <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-5xl">
+              {/* System Pulse Widget */}
+              <div className="group relative overflow-hidden rounded-2xl border border-border bg-card/40 p-4 flex items-center justify-between backdrop-blur transition-all duration-300 hover:border-success/30 hover:bg-card/60 hover:shadow-lg hover:-translate-y-0.5 select-none cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <div className="relative flex items-center justify-center h-9 w-9 rounded-xl bg-success/10 border border-success/20 text-success">
+                    <span className="absolute flex h-2.5 w-2.5">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
+                      <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-success" />
+                    </span>
+                  </div>
+                  <div className="text-left">
+                    <div className="text-[9px] font-mono font-bold tracking-wider text-muted-foreground uppercase">TELEMETRY // ORB</div>
+                    <div className="text-xs font-semibold font-mono text-foreground tracking-wide mt-0.5 uppercase">PULSE: ACTIVE</div>
+                  </div>
+                </div>
+                {/* Waveform Ticker */}
+                <div className="flex items-end gap-0.5 h-6 select-none">
+                  {[4, 12, 6, 16, 8, 4].map((h, i) => (
+                    <span
+                      key={i}
+                      className="w-0.5 bg-success/70 rounded-full animate-pulse"
+                      style={{
+                        height: `${h}px`,
+                        animationDuration: `${0.8 + i * 0.15}s`,
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Validator Mesh Widget */}
+              <div className="group relative overflow-hidden rounded-2xl border border-border bg-card/40 p-4 flex items-center justify-between backdrop-blur transition-all duration-300 hover:border-primary/30 hover:bg-card/60 hover:shadow-lg hover:-translate-y-0.5 select-none cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary group-hover:scale-105 transition-transform duration-300">
+                    <Bot className="h-5 w-5 animate-pulse" />
+                  </div>
+                  <div className="text-left">
+                    <div className="text-[9px] font-mono font-bold tracking-wider text-muted-foreground uppercase">VALIDATOR MESH</div>
+                    <div className="text-xs font-semibold font-mono text-foreground tracking-wide mt-0.5 uppercase">9,842 ONLINE</div>
+                  </div>
+                </div>
+                <div className="flex gap-1 select-none pr-1">
+                  {Array.from({ length: 4 }).map((_, idx) => (
+                    <span
+                      key={idx}
+                      className="h-1.5 w-1.5 rounded-full bg-primary/80 animate-ping"
+                      style={{
+                        animationDuration: "1.5s",
+                        animationDelay: `${idx * 200}ms`,
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Consensus Accuracy Widget */}
+              <div className="group relative overflow-hidden rounded-2xl border border-border bg-card/40 p-4 flex items-center justify-between backdrop-blur transition-all duration-300 hover:border-secondary/30 hover:bg-card/60 hover:shadow-lg hover:-translate-y-0.5 select-none cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary group-hover:rotate-12 transition-transform duration-300">
+                    <Trophy className="h-5 w-5" />
+                  </div>
+                  <div className="text-left">
+                    <div className="text-[9px] font-mono font-bold tracking-wider text-muted-foreground uppercase">ACCURACY RATING</div>
+                    <div className="text-xs font-semibold font-mono text-foreground tracking-wide mt-0.5 uppercase">99.98% SYNC</div>
+                  </div>
+                </div>
+                <div className="relative h-7 w-7 flex items-center justify-center">
+                  <svg className="h-7 w-7 -rotate-90" viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="14" fill="none" stroke="var(--border)" strokeWidth="3" />
+                    <circle
+                      cx="18"
+                      cy="18"
+                      r="14"
+                      fill="none"
+                      stroke="var(--secondary)"
+                      strokeWidth="3"
+                      strokeDasharray="88"
+                      strokeDashoffset={88 - 88 * 0.999}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span className="absolute text-[8px] font-mono font-bold text-secondary">99%</span>
+                </div>
+              </div>
+
+              {/* ROI Savings Widget */}
+              <div className="group relative overflow-hidden rounded-2xl border border-border bg-card/40 p-4 flex items-center justify-between backdrop-blur transition-all duration-300 hover:border-primary/30 hover:bg-card/60 hover:shadow-lg hover:-translate-y-0.5 select-none cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary group-hover:translate-y-[-2px] transition-transform duration-300">
+                    <Coins className="h-5 w-5" />
+                  </div>
+                  <div className="text-left">
+                    <div className="text-[9px] font-mono font-bold tracking-wider text-muted-foreground uppercase">GAS ROI SAVED</div>
+                    <div className="text-xs font-semibold font-mono text-foreground tracking-wide mt-0.5 uppercase">$4.2M SAVED</div>
+                  </div>
+                </div>
+                <svg className="h-5 w-12 text-primary" viewBox="0 0 50 20">
+                  <path d="M0,16 Q10,12 20,13 T40,6 T50,2" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M0,16 Q10,12 20,13 T40,6 T50,2 L50,20 L0,20 Z" fill="currentColor" opacity="0.12" />
+                </svg>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -80,7 +271,7 @@ function MissionHQ() {
         <p className="mt-3 text-xs text-muted-foreground">Illustrative telemetry · simulation feed</p>
       </section>
 
-      {/* Bento — Apple-style */}
+      {/* Bento — Apple-style upgraded with Portmind glass styling */}
       <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
         <div className="max-w-2xl">
           <div className="eyebrow">Mission Modules</div>
@@ -175,22 +366,22 @@ function MissionHQ() {
         </div>
       </section>
 
-
-
-      {/* Why Layer 2 */}
+      {/* Why Layer 2 - Cyber Glass Panel Upgrade */}
       <section className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">
-        <div className="surface overflow-hidden">
-          <div className="grid gap-10 p-8 md:grid-cols-2 md:p-12">
+        <div className="relative overflow-hidden rounded-3xl border border-border bg-card/65 backdrop-blur-xl p-8 md:p-12 shadow-xl group">
+          <div className="absolute -inset-24 rounded-full opacity-10 bg-[radial-gradient(circle,rgba(2,132,199,0.15)_0%,transparent_70%)] blur-2xl pointer-events-none" />
+          <span className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <div className="grid gap-10 md:grid-cols-2 relative z-10">
             <div>
               <div className="eyebrow">Why Layer 2</div>
               <h2 className="mt-2 text-3xl font-bold sm:text-4xl">Ethereum settles. Arbitrum scales.</h2>
-              <p className="mt-4 text-muted-foreground">
+              <p className="mt-4 text-muted-foreground leading-relaxed">
                 Ethereum's mainnet is a global settlement layer — every node re-executes
                 every transaction, which is what makes it trustworthy and what makes it
                 slow. At interplanetary scale, that ceiling matters: a busy period can push
                 gas fees above $20 and confirmation times past a minute.
               </p>
-              <p className="mt-3 text-muted-foreground">
+              <p className="mt-3 text-muted-foreground leading-relaxed">
                 Arbitrum is an optimistic rollup. It batches thousands of transactions
                 off-chain, executes them in a cheaper environment, and posts a single
                 cryptographic proof back to Ethereum. You inherit L1 security while
@@ -201,7 +392,7 @@ function MissionHQ() {
               <Compare label="Median transaction fee" l1="$3.20" l2="$0.04" />
               <Compare label="Time to soft finality" l1="~12s" l2="~250ms" />
               <Compare label="Throughput (TPS)" l1="~15" l2="~4,000" />
-              <div className="mt-2 rounded-lg border border-primary/30 bg-primary/5 p-4 text-sm">
+              <div className="mt-2 rounded-xl border border-primary/30 bg-primary/5 p-4 text-sm leading-relaxed text-foreground">
                 <span className="font-semibold text-primary">Concrete benefit:</span>{" "}
                 Sending 100 USDC from a lunar wallet costs pennies on Arbitrum instead of
                 several dollars on mainnet — and confirms before the next radar sweep.
@@ -210,13 +401,16 @@ function MissionHQ() {
           </div>
         </div>
       </section>
+
+      {/* FAQ Section */}
+      <FAQSection />
     </SiteLayout>
   );
 }
 
 function Compare({ label, l1, l2 }: { label: string; l1: string; l2: string }) {
   return (
-    <div className="grid grid-cols-[1fr_auto_auto] items-center gap-4 rounded-lg border border-border/70 bg-background/40 p-3 text-sm">
+    <div className="grid grid-cols-[1fr_auto_auto] items-center gap-4 rounded-xl border border-border/70 bg-background/40 p-3.5 text-sm">
       <span className="text-muted-foreground">{label}</span>
       <span className="font-mono text-muted-foreground line-through">{l1}</span>
       <span className="font-mono font-semibold text-primary">{l2}</span>
@@ -246,37 +440,59 @@ function BentoCard({
   tone?: BentoTone;
   children?: React.ReactNode;
 }) {
-  const bg =
+  const accentGlow =
     tone === "primary"
-      ? "bg-gradient-to-br from-primary/15 via-card to-card border-primary/30"
+      ? "rgba(2, 132, 199, 0.12)"
       : tone === "secondary"
-        ? "bg-gradient-to-br from-secondary/15 via-card to-card border-secondary/30"
-        : "bg-card";
+        ? "rgba(124, 58, 237, 0.12)"
+        : "rgba(255, 255, 255, 0.03)";
+  const accentBorder =
+    tone === "primary"
+      ? "group-hover:border-primary/45"
+      : tone === "secondary"
+        ? "group-hover:border-secondary/45"
+        : "group-hover:border-foreground/20";
+        
   return (
     <motion.div
       initial={{ opacity: 0, y: 14 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.4 }}
-      className={`group relative flex flex-col justify-between overflow-hidden rounded-3xl border p-6 sm:p-8 transition-all hover:-translate-y-0.5 ${bg} ${className}`}
+      className={cn(
+        "group relative flex flex-col justify-between overflow-hidden rounded-[24px] border p-6 sm:p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl cursor-default",
+        "border-border bg-card/65 backdrop-blur-xl",
+        accentBorder,
+        className
+      )}
     >
-      <div>
+      {/* Dynamic glow corner */}
+      <div
+        className="absolute -inset-24 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none blur-2xl"
+        style={{
+          background: `radial-gradient(circle, ${accentGlow} 0%, transparent 70%)`
+        }}
+      />
+      {/* Top border sheen */}
+      <span className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-white/10 to-transparent transition-opacity duration-300 group-hover:via-white/20" />
+      
+      <div className="relative z-10">
         <div className="flex items-center justify-between">
           <div className="eyebrow">{eyebrow}</div>
           {Icon && (
-            <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-foreground/5">
-              <Icon className="h-4 w-4 text-foreground/80" />
+            <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-muted border border-border/60 text-muted-foreground transition-colors group-hover:bg-primary/10 group-hover:text-primary group-hover:border-primary/20">
+              <Icon className="h-4.5 w-4.5" />
             </div>
           )}
         </div>
-        <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h3>
-        <p className="mt-2 max-w-md text-sm text-muted-foreground sm:text-base">{body}</p>
+        <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight sm:text-3xl transition-colors group-hover:text-primary">{title}</h3>
+        <p className="mt-2 max-w-md text-sm text-muted-foreground sm:text-base leading-relaxed">{body}</p>
       </div>
-      {children && <div className="mt-6">{children}</div>}
+      {children && <div className="mt-6 relative z-10">{children}</div>}
       {href && cta && (
         <Link
           to={href}
-          className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:gap-2 transition-all"
+          className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:gap-2 transition-all relative z-10"
         >
           {cta} <ArrowUpRight className="h-4 w-4" />
         </Link>
@@ -301,9 +517,9 @@ function MiniBar({ label, value, width, tone }: { label: string; value: string; 
         <span>{label}</span>
         <span className="font-mono">{value}</span>
       </div>
-      <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-foreground/5">
+      <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-foreground/5">
         <div
-          className={`h-full rounded-full ${tone === "primary" ? "bg-primary" : "bg-muted-foreground/50"}`}
+          className={cn("h-full rounded-full", tone === "primary" ? "bg-primary" : "bg-muted-foreground/50")}
           style={{ width }}
         />
       </div>
@@ -319,7 +535,7 @@ function MarketVisual() {
     { name: "SOL", price: "$174.20", ch: "+3.87%", up: true },
   ];
   return (
-    <div className="rounded-2xl border border-border/60 bg-background/60 p-4 backdrop-blur">
+    <div className="rounded-2xl border border-border/60 bg-background/60 p-4 backdrop-blur shadow-sm">
       <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
@@ -329,10 +545,10 @@ function MarketVisual() {
       </div>
       <div className="grid grid-cols-2 gap-2">
         {rows.map((r) => (
-          <div key={r.name} className="rounded-xl bg-foreground/5 p-3">
+          <div key={r.name} className="rounded-xl bg-foreground/5 p-3 border border-border/40">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold">{r.name}</span>
-              <span className={`font-mono ${r.up ? "text-success" : "text-destructive"}`}>{r.ch}</span>
+              <span className={cn("font-mono", r.up ? "text-success" : "text-destructive")}>{r.ch}</span>
             </div>
             <div className="mt-1 font-mono text-sm font-semibold">{r.price}</div>
           </div>
@@ -344,11 +560,11 @@ function MarketVisual() {
 
 function HashVisual() {
   return (
-    <div className="rounded-2xl border border-border/60 bg-background/60 p-4 font-mono text-xs backdrop-blur">
+    <div className="rounded-2xl border border-border/60 bg-background/60 p-4 font-mono text-xs backdrop-blur shadow-sm">
       <div className="flex items-center justify-between text-muted-foreground">
         <span className="eyebrow">Block #2</span>
         <span className="inline-flex items-center gap-1.5 text-success">
-          <Layers className="h-3 w-3" /> Valid
+          <Layers className="h-3.5 w-3.5" /> Valid
         </span>
       </div>
       <div className="mt-3 space-y-1.5">
@@ -360,4 +576,70 @@ function HashVisual() {
     </div>
   );
 }
+
+function FAQSection() {
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+
+  return (
+    <section className="relative overflow-hidden py-24 border-t border-border/80 bg-background/25 backdrop-blur-sm">
+      {/* Dynamic glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-primary/5 blur-3xl pointer-events-none" />
+
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="mx-auto max-w-4xl px-6 relative z-10 text-center"
+      >
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+          FAQ
+        </div>
+
+        <h2 className="mt-4 font-display text-4xl sm:text-5xl font-bold tracking-tight text-foreground leading-tight">
+          Frequently asked questions
+        </h2>
+
+        <div className="mt-16 max-w-3xl mx-auto flex flex-col border-t border-border text-left">
+          {faqData.map((item, idx) => {
+            const isOpen = openIdx === idx;
+            return (
+              <div key={idx} className="border-b border-border py-6 sm:py-7">
+                <button
+                  onClick={() => setOpenIdx(isOpen ? null : idx)}
+                  className="w-full flex items-center justify-between text-left gap-4 group cursor-pointer bg-transparent border-none p-0 outline-none"
+                >
+                  <span className="text-base sm:text-xl font-semibold text-foreground/90 group-hover:text-primary transition-colors duration-200 tracking-tight">
+                    {item.question}
+                  </span>
+                  <div className="relative w-5 h-5 flex items-center justify-center shrink-0">
+                    {/* Horizontal line */}
+                    <div className="absolute w-4.5 h-[1.5px] bg-muted-foreground group-hover:bg-primary transition-colors duration-200" />
+                    {/* Vertical line */}
+                    <motion.div
+                      className="absolute w-[1.5px] h-4.5 bg-muted-foreground group-hover:bg-primary transition-colors duration-200"
+                      animate={{ rotate: isOpen ? 90 : 0, opacity: isOpen ? 0 : 1, scaleY: isOpen ? 0 : 1 }}
+                      transition={{ duration: 0.2, ease: "easeInOut" }}
+                    />
+                  </div>
+                </button>
+                <motion.div
+                  initial={false}
+                  animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  className="overflow-hidden"
+                >
+                  <div className="pt-4 text-sm sm:text-base text-muted-foreground leading-relaxed max-w-[95%] font-normal">
+                    {item.answer}
+                  </div>
+                </motion.div>
+              </div>
+            );
+          })}
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
 

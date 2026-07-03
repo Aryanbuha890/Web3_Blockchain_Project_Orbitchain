@@ -143,21 +143,24 @@ function MissionControl() {
 
       {summary && (
         <section className="mx-auto max-w-7xl px-4 pb-6 sm:px-6 lg:px-8">
-          <div className="surface flex flex-wrap items-center justify-between gap-4 px-5 py-3 text-sm">
-            <div className="flex items-center gap-4">
-              <span className="eyebrow">Top gainer</span>
-              <span className="font-semibold">{summary.gainer.name}</span>
-              <span className="font-mono text-success">+{summary.gainer.ch.toFixed(2)}%</span>
+          <div className="relative overflow-hidden rounded-2xl border border-border bg-card/65 backdrop-blur-xl flex flex-wrap items-center justify-between gap-4 px-5 py-3 text-sm">
+            <span className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-2 relative z-10">
+              <div className="flex items-center gap-2">
+                <span className="eyebrow font-sans uppercase text-[10px] tracking-wider text-muted-foreground">Top gainer</span>
+                <span className="font-semibold text-foreground">{summary.gainer.name}</span>
+                <span className="font-mono text-success">+{summary.gainer.ch.toFixed(2)}%</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="eyebrow font-sans uppercase text-[10px] tracking-wider text-muted-foreground">Top loser</span>
+                <span className="font-semibold text-foreground">{summary.loser.name}</span>
+                <span className="font-mono text-destructive">{summary.loser.ch.toFixed(2)}%</span>
+              </div>
             </div>
-            <div className="flex items-center gap-4">
-              <span className="eyebrow">Top loser</span>
-              <span className="font-semibold">{summary.loser.name}</span>
-              <span className="font-mono text-destructive">{summary.loser.ch.toFixed(2)}%</span>
-            </div>
-            <div className="flex items-center gap-3 text-muted-foreground">
-              <span className="eyebrow">Gas (illustrative)</span>
-              <span className="font-mono">ETH L1: ~24 gwei</span>
-              <span className="font-mono text-primary">ARB L2: ~0.1 gwei</span>
+            <div className="flex items-center gap-3 text-muted-foreground font-mono text-xs relative z-10">
+              <span className="eyebrow font-sans uppercase text-[10px] tracking-wider text-muted-foreground">Gas</span>
+              <span>ETH L1: ~24 gwei</span>
+              <span className="text-primary">ARB L2: ~0.1 gwei</span>
             </div>
           </div>
         </section>
@@ -165,13 +168,13 @@ function MissionControl() {
 
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {error && !prices && (
-          <div className="surface flex items-center gap-3 border-destructive/40 p-6 text-sm">
+          <div className="relative overflow-hidden rounded-2xl border border-destructive/40 bg-destructive/5 backdrop-blur-xl flex items-center gap-3 p-6 text-sm">
             <AlertTriangle className="h-5 w-5 text-destructive" />
-            <div className="flex-1">
+            <div className="flex-1 relative z-10">
               <div className="font-semibold">Signal lost.</div>
               <div className="text-muted-foreground">{error}. Retry to re-establish contact.</div>
             </div>
-            <button onClick={fetchPrices} className="rounded-md bg-primary px-3 py-1.5 text-sm font-semibold text-primary-foreground">
+            <button onClick={fetchPrices} className="relative z-10 rounded-md bg-primary px-3 py-1.5 text-sm font-semibold text-primary-foreground cursor-pointer">
               Retry
             </button>
           </div>
@@ -194,22 +197,23 @@ function MissionControl() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="surface p-6">
-          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
+        <div className="relative overflow-hidden rounded-3xl border border-border bg-card/65 backdrop-blur-xl p-6 shadow-xl group">
+          <span className="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/10 to-transparent transition-opacity duration-300 group-hover:via-white/20" />
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 relative z-10">
             <div className="min-w-0">
-              <div className="eyebrow">Trajectory</div>
-              <h2 className="mt-1 truncate text-xl font-semibold">
+              <div className="eyebrow font-sans uppercase text-[10px] tracking-wider text-muted-foreground">Trajectory</div>
+              <h2 className="mt-1 truncate text-xl font-semibold text-foreground">
                 {selectedCoin.name} <span className="text-muted-foreground">/ USD</span>
               </h2>
             </div>
-            <div className="flex shrink-0 rounded-full border border-border bg-card p-1 text-xs font-medium">
+            <div className="flex shrink-0 rounded-full border border-border bg-background p-1 text-xs font-medium">
               {(["1", "7", "30"] as Timeframe[]).map((t) => (
                 <button
                   key={t}
                   onClick={() => setTimeframe(t)}
                   className={cn(
-                    "rounded-full px-3 py-1 transition",
-                    timeframe === t ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground",
+                    "rounded-full px-3 py-1 transition cursor-pointer",
+                    timeframe === t ? "bg-primary text-primary-foreground font-semibold" : "text-muted-foreground hover:text-foreground",
                   )}
                 >
                   {t === "1" ? "24H" : t === "7" ? "7D" : "30D"}
@@ -218,9 +222,9 @@ function MissionControl() {
             </div>
           </div>
 
-          <div className="mt-6 h-72">
+          <div className="mt-6 h-72 relative z-10">
             {chartLoading || !chart ? (
-              <div className="skeleton-shimmer h-full w-full rounded-lg" />
+              <div className="skeleton-shimmer h-full w-full rounded-2xl" />
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chart} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
@@ -253,7 +257,7 @@ function MissionControl() {
                     contentStyle={{
                       background: "var(--card)",
                       border: "1px solid var(--border)",
-                      borderRadius: 8,
+                      borderRadius: 12,
                       fontSize: 12,
                       color: "var(--foreground)",
                     }}
@@ -282,38 +286,49 @@ function PriceCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay }}
       className={cn(
-        "surface group text-left p-5 transition-all hover:-translate-y-0.5",
-        selected ? "border-primary/60 glow-primary" : "hover:border-primary/30",
+        "relative overflow-hidden text-left p-5 transition-all duration-300 hover:-translate-y-1 rounded-[20px] border bg-card/65 backdrop-blur-xl group cursor-pointer w-full",
+        selected
+          ? "border-primary shadow-[0_0_20px_rgba(2,132,199,0.15)]"
+          : "border-border hover:border-primary/40 hover:shadow-lg",
       )}
     >
-      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+      <span className="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/10 to-transparent transition-opacity duration-300 group-hover:via-white/20" />
+      <div
+        className="absolute -inset-16 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none blur-xl"
+        style={{
+          background: selected
+            ? "radial-gradient(circle, rgba(2, 132, 199, 0.1) 0%, transparent 70%)"
+            : "radial-gradient(circle, rgba(255, 255, 255, 0.02) 0%, transparent 70%)"
+        }}
+      />
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 relative z-10">
         <div className="min-w-0">
-          <div className="truncate text-sm font-semibold">{coin.name}</div>
+          <div className="truncate text-sm font-semibold text-foreground">{coin.name}</div>
           <div className="text-xs text-muted-foreground">{coin.symbol}</div>
         </div>
         {data && (
           <span
             className={cn(
-              "inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 font-mono text-xs",
+              "inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-0.5 font-mono text-xs font-semibold",
               up ? "bg-success/15 text-success" : "bg-destructive/15 text-destructive",
             )}
           >
-            {up ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
+            {up ? <ArrowUpRight className="h-3.5 w-3.5" /> : <ArrowDownRight className="h-3.5 w-3.5" />}
             {data.usd_24h_change.toFixed(2)}%
           </span>
         )}
       </div>
-      <div className="mt-4 font-mono text-2xl font-semibold tabular-nums">
+      <div className="mt-4 font-mono text-2xl font-semibold tabular-nums relative z-10 text-foreground">
         {data ? `$${data.usd.toLocaleString(undefined, { maximumFractionDigits: data.usd < 10 ? 3 : 2 })}` : "—"}
       </div>
-      <div className="mt-4 grid grid-cols-2 gap-2 text-xs text-muted-foreground">
+      <div className="mt-4 grid grid-cols-2 gap-2 text-xs text-muted-foreground relative z-10">
         <div>
-          <div className="eyebrow">Market cap</div>
-          <div className="mt-0.5 font-mono">{data ? formatCompact(data.usd_market_cap) : "—"}</div>
+          <div className="eyebrow font-sans text-[9px] uppercase tracking-wider text-muted-foreground">Market cap</div>
+          <div className="mt-0.5 font-mono text-foreground">{data ? formatCompact(data.usd_market_cap) : "—"}</div>
         </div>
         <div>
-          <div className="eyebrow">24h vol</div>
-          <div className="mt-0.5 font-mono">{data ? formatCompact(data.usd_24h_vol) : "—"}</div>
+          <div className="eyebrow font-sans text-[9px] uppercase tracking-wider text-muted-foreground">24h vol</div>
+          <div className="mt-0.5 font-mono text-foreground">{data ? formatCompact(data.usd_24h_vol) : "—"}</div>
         </div>
       </div>
     </motion.button>
@@ -322,7 +337,7 @@ function PriceCard({
 
 function SkeletonCard() {
   return (
-    <div className="surface space-y-4 p-5">
+    <div className="relative overflow-hidden rounded-[20px] border border-border bg-card/65 backdrop-blur-xl p-5 space-y-4">
       <div className="skeleton-shimmer h-4 w-24 rounded" />
       <div className="skeleton-shimmer h-8 w-32 rounded" />
       <div className="grid grid-cols-2 gap-2">

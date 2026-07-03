@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Menu, X, Orbit, Sun, Moon } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const links = [
@@ -40,120 +41,175 @@ export function Navbar() {
   };
 
   return (
-    <div className="sticky top-0 z-50 flex justify-center px-3 pt-3 sm:px-6">
-      <header
+    <motion.header
+      initial={false}
+      animate={{
+        paddingTop: scrolled ? 10 : 18,
+        paddingBottom: scrolled ? 10 : 18,
+      }}
+      transition={{ type: "spring", stiffness: 260, damping: 30 }}
+      className="fixed inset-x-0 top-0 z-50 px-3 sm:px-6"
+    >
+      <motion.div
+        initial={false}
+        animate={{
+          maxWidth: scrolled ? 860 : 1180,
+          paddingLeft: scrolled ? 16 : 24,
+          paddingRight: scrolled ? 8 : 12,
+          paddingTop: scrolled ? 6 : 10,
+          paddingBottom: scrolled ? 6 : 10,
+        }}
+        transition={{ type: "spring", stiffness: 240, damping: 28 }}
         className={cn(
-          "w-full transition-all duration-300 ease-out",
-          "rounded-full border border-border/60 bg-background/70 backdrop-blur-xl",
-          scrolled
-            ? "max-w-3xl shadow-[0_8px_32px_-12px_rgba(0,0,0,0.5)]"
-            : "max-w-6xl",
+          "relative mx-auto flex items-center justify-between rounded-full border backdrop-blur-2xl transition-shadow duration-300",
+          theme === "dark"
+            ? "border-white/10 bg-slate-950/70 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.7),inset_0_1px_0_0_rgba(255,255,255,0.1),inset_0_-1px_0_0_rgba(255,255,255,0.02)]"
+            : "border-slate-200/80 bg-white/75 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.1),inset_0_1px_0_0_rgba(255,255,255,0.6)]"
         )}
       >
-        <div
-          className={cn(
-            "flex items-center justify-between transition-all duration-300 ease-out",
-            scrolled ? "h-12 px-3 sm:px-4" : "h-16 px-4 sm:px-6",
-          )}
-        >
-          <Link to="/" className="flex shrink-0 items-center gap-2 font-display font-bold tracking-tight">
-            <Orbit
-              className={cn("text-primary transition-all", scrolled ? "h-4 w-4" : "h-5 w-5")}
-              strokeWidth={2.2}
-            />
-            <span className={cn("transition-all", scrolled ? "text-sm" : "text-lg")}>OrbitChain</span>
+        {/* Top gloss reflection sheen */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-x-5 top-0 h-1/2 rounded-t-full opacity-60"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%)",
+          }}
+        />
+
+        {/* Soft colorful background glow */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-full opacity-30"
+          style={{
+            background:
+              "radial-gradient(120% 80% at 10% 0%, rgba(2,132,199,0.15) 0%, rgba(2,132,199,0) 55%), radial-gradient(120% 80% at 90% 100%, rgba(124,58,237,0.12) 0%, rgba(124,58,237,0) 55%)",
+          }}
+        />
+
+        {/* Logo */}
+        <Link to="/" className="relative flex shrink-0 items-center gap-2.5 font-display font-bold tracking-tight">
+          <div className="relative flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(2,132,199,0.2)]">
+            <Orbit className="h-4.5 w-4.5 text-primary animate-pulse" strokeWidth={2.2} />
+          </div>
+          <span className={cn("transition-all text-foreground", scrolled ? "text-sm" : "text-base")}>
+            OrbitChain
+          </span>
+        </Link>
+
+        {/* Navigation Links */}
+        <nav className="relative hidden md:flex items-center gap-1 text-sm">
+          {links.map((l) => {
+            const active = pathname === l.to;
+            return (
+              <Link
+                key={l.to}
+                to={l.to}
+                className={cn(
+                  "rounded-full font-medium transition-all px-4 py-1.5 text-[13.5px]",
+                  active
+                    ? "bg-primary/10 text-primary border border-primary/10 font-semibold"
+                    : "text-muted-foreground hover:text-foreground border border-transparent hover:bg-muted/50",
+                )}
+              >
+                {l.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Desktop Theme Toggle & Launch */}
+        <div className="relative hidden md:flex md:items-center md:gap-3">
+          <button
+            onClick={toggleTheme}
+            className={cn(
+              "inline-flex shrink-0 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-all hover:bg-muted hover:text-foreground cursor-pointer shadow-sm",
+              scrolled ? "h-8 w-8" : "h-9 w-9",
+            )}
+            aria-label="Toggle theme"
+          >
+            {theme === "dark" ? <Sun className="h-4.5 w-4.5" /> : <Moon className="h-4.5 w-4.5" />}
+          </button>
+          <Link
+            to="/mission-control"
+            className={cn(
+              "group relative inline-flex shrink-0 items-center gap-1.5 overflow-hidden rounded-full font-semibold text-white shadow-md transition-all hover:-translate-y-px hover:shadow-lg",
+              scrolled ? "px-4.5 py-1.5 text-xs h-8" : "px-6 py-2 h-9.5 text-sm",
+            )}
+            style={{
+              backgroundImage: "linear-gradient(120deg, var(--color-primary) 0%, var(--color-secondary) 110%)",
+            }}
+          >
+            <span className="relative z-10">Launch</span>
+            <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-750 group-hover:translate-x-full" />
           </Link>
-
-          <nav className="hidden items-center gap-0.5 md:flex">
-            {links.map((l) => {
-              const active = pathname === l.to;
-              return (
-                <Link
-                  key={l.to}
-                  to={l.to}
-                  className={cn(
-                    "rounded-full font-medium transition-all",
-                    scrolled ? "px-3 py-1 text-xs" : "px-4 py-1.5 text-sm",
-                    active
-                      ? "bg-primary/15 text-primary"
-                      : "text-muted-foreground hover:text-foreground",
-                  )}
-                >
-                  {l.label}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* Desktop Mode Theme Toggle and Launch Button */}
-          <div className="hidden md:flex md:items-center md:gap-3">
-            <button
-              onClick={toggleTheme}
-              className={cn(
-                "inline-flex shrink-0 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-all hover:bg-muted hover:text-foreground cursor-pointer shadow-sm",
-                scrolled ? "h-7 w-7" : "h-9 w-9",
-              )}
-              aria-label="Toggle theme"
-            >
-              {theme === "dark" ? (
-                <Sun className={cn("transition-all", scrolled ? "h-3.5 w-3.5" : "h-4.5 w-4.5")} />
-              ) : (
-                <Moon className={cn("transition-all", scrolled ? "h-3.5 w-3.5" : "h-4.5 w-4.5")} />
-              )}
-            </button>
-            <Link
-              to="/mission-control"
-              className={cn(
-                "inline-flex shrink-0 items-center gap-2 rounded-full bg-primary font-semibold text-primary-foreground transition-all hover:scale-[1.03]",
-                scrolled ? "px-3 py-1 text-xs" : "px-4 py-2 text-sm",
-              )}
-            >
-              Launch
-            </Link>
-          </div>
-
-          {/* Mobile Theme Toggle and Menu Toggle */}
-          <div className="flex items-center gap-1 md:hidden">
-            <button
-              onClick={toggleTheme}
-              className="rounded-full p-2 text-muted-foreground hover:text-foreground cursor-pointer"
-              aria-label="Toggle theme"
-            >
-              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </button>
-            <button
-              className="rounded-full p-2 text-muted-foreground cursor-pointer"
-              onClick={() => setOpen((o) => !o)}
-              aria-label="Toggle menu"
-            >
-              {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
-          </div>
         </div>
 
-        {open && (
-          <div className="border-t border-border/60 md:hidden">
-            <nav className="flex flex-col gap-1 px-3 py-3">
-              {links.map((l) => {
-                const active = pathname === l.to;
-                return (
-                  <Link
-                    key={l.to}
-                    to={l.to}
-                    onClick={() => setOpen(false)}
-                    className={cn(
-                      "rounded-full px-4 py-2 text-sm font-medium",
-                      active ? "bg-primary/15 text-primary" : "text-muted-foreground",
-                    )}
-                  >
-                    {l.label}
-                  </Link>
-                );
-              })}
-            </nav>
-          </div>
-        )}
-      </header>
-    </div>
+        {/* Mobile menu toggle & Theme toggle */}
+        <div className="flex items-center gap-1.5 md:hidden relative z-10">
+          <button
+            onClick={toggleTheme}
+            className="rounded-full p-2 text-muted-foreground hover:text-foreground cursor-pointer"
+            aria-label="Toggle theme"
+          >
+            {theme === "dark" ? <Sun className="h-4.5 w-4.5" /> : <Moon className="h-4.5 w-4.5" />}
+          </button>
+          <button
+            className="rounded-full p-2 text-muted-foreground cursor-pointer"
+            onClick={() => setOpen((o) => !o)}
+            aria-label="Toggle menu"
+          >
+            {open ? <X className="h-4.5 w-4.5" /> : <Menu className="h-4.5 w-4.5" />}
+          </button>
+        </div>
+
+        {/* Mobile Menu Dropdown */}
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ opacity: 0, y: -15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.2 }}
+              className={cn(
+                "absolute top-full left-0 right-0 mt-3 p-5 rounded-3xl border shadow-2xl flex flex-col gap-2.5 md:hidden z-50",
+                theme === "dark" ? "bg-slate-950/95 border-white/10" : "bg-white/95 border-slate-200"
+              )}
+            >
+              <nav className="flex flex-col gap-1">
+                {links.map((l) => {
+                  const active = pathname === l.to;
+                  return (
+                    <Link
+                      key={l.to}
+                      to={l.to}
+                      onClick={() => setOpen(false)}
+                      className={cn(
+                        "rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors",
+                        active ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted/40"
+                      )}
+                    >
+                      {l.label}
+                    </Link>
+                  );
+                })}
+              </nav>
+              <div className="pt-2 border-t border-border/50">
+                <Link
+                  to="/mission-control"
+                  onClick={() => setOpen(false)}
+                  className="flex h-10 w-full items-center justify-center rounded-xl text-sm font-semibold text-white"
+                  style={{
+                    backgroundImage: "linear-gradient(120deg, var(--color-primary) 0%, var(--color-secondary) 110%)",
+                  }}
+                >
+                  Launch Console
+                </Link>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </motion.header>
   );
 }

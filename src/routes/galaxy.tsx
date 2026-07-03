@@ -140,18 +140,19 @@ function GalaxyExplorer() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.35, delay: i * 0.04 }}
-            className="surface overflow-hidden"
+            className="relative overflow-hidden rounded-3xl border border-border bg-card/65 backdrop-blur-xl shadow-xl group"
           >
-            <div className="flex items-center justify-between border-b border-border/60 px-6 py-3">
-              <div className="eyebrow">{c.eyebrow}</div>
-              <div className="text-xs text-muted-foreground">Comparison {String(i + 1).padStart(2, "0")}</div>
+            <span className="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/10 to-transparent transition-opacity duration-300 group-hover:via-white/20" />
+            <div className="flex items-center justify-between border-b border-border/60 px-6 py-4 relative z-10">
+              <div className="eyebrow font-sans uppercase text-[10px] tracking-wider text-muted-foreground">{c.eyebrow}</div>
+              <div className="text-xs text-muted-foreground font-mono">Comparison {String(i + 1).padStart(2, "0")}</div>
             </div>
-            <div className="grid divide-border md:grid-cols-2 md:divide-x">
+            <div className="grid divide-y md:divide-y-0 divide-border md:grid-cols-2 md:divide-x relative z-10">
               <ComparisonSide side={c.left} tint="primary" />
               <ComparisonSide side={c.right} tint="secondary" />
             </div>
-            <div className="border-t border-border/60 bg-background/40 px-6 py-3 text-sm">
-              <span className="eyebrow mr-2 inline">Why it matters</span>
+            <div className="border-t border-border/60 bg-background/30 px-6 py-4 text-sm relative z-10 leading-relaxed">
+              <span className="eyebrow mr-2 inline font-sans uppercase text-[10px] tracking-wider text-muted-foreground">Why it matters</span>
               <span className="text-muted-foreground">{c.matters}</span>
             </div>
           </motion.article>
@@ -162,20 +163,22 @@ function GalaxyExplorer() {
 }
 
 function ComparisonSide({ side, tint }: { side: Side; tint: "primary" | "secondary" }) {
-  const color = tint === "primary" ? "text-primary bg-primary/10" : "text-secondary bg-secondary/10";
+  const color = tint === "primary"
+    ? "text-primary bg-primary/10 border-primary/20"
+    : "text-secondary bg-secondary/10 border-secondary/20";
   return (
-    <div className="p-6">
+    <div className="p-6 sm:p-8">
       <div className="flex items-center gap-3">
-        <div className={`inline-flex h-9 w-9 items-center justify-center rounded-lg ${color}`}>
+        <div className={`inline-flex h-9 w-9 items-center justify-center rounded-xl border ${color}`}>
           <side.icon className="h-4.5 w-4.5" />
         </div>
-        <h3 className="text-lg font-semibold">{side.title}</h3>
+        <h3 className="text-lg font-bold text-foreground">{side.title}</h3>
       </div>
-      <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
+      <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
         {side.points.map((p) => (
           <li key={p} className="flex gap-2">
-            <span className={`mt-1.5 h-1 w-1 shrink-0 rounded-full ${tint === "primary" ? "bg-primary" : "bg-secondary"}`} />
-            <span>{p}</span>
+            <span className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${tint === "primary" ? "bg-primary" : "bg-secondary"}`} />
+            <span className="leading-relaxed">{p}</span>
           </li>
         ))}
       </ul>
