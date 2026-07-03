@@ -63,18 +63,38 @@ function MissionHQ() {
   return (
     <SiteLayout>
       {/* Hero */}
-      <section className="relative overflow-hidden pt-24 pb-12 flex flex-col items-center">
+      <section className="relative overflow-hidden pt-32 pb-16 flex flex-col items-center min-h-[90vh] justify-center bg-gradient-to-b from-background via-background to-background/50">
         <Starfield />
 
-        {/* Scanlines & Grid overlays matching Portmind */}
-        <div className="absolute inset-0 opacity-[0.03] cyber-grid-overlay pointer-events-none" />
-        <div className="pointer-events-none absolute inset-0 opacity-[0.02] mix-blend-overlay cyber-scanlines" />
+        {/* Rotating Futuristic HUD concentric rings backdrop */}
+        <div className="absolute top-[42%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] opacity-[0.08] pointer-events-none select-none z-0">
+          <svg className="w-full h-full text-primary" viewBox="0 0 200 200" fill="none" stroke="currentColor">
+            {/* Outer dotted ring */}
+            <circle cx="100" cy="100" r="95" strokeWidth="0.35" strokeDasharray="1.5 3" className="hud-rotate-cw origin-center" />
+            {/* Outer dashed ring */}
+            <circle cx="100" cy="100" r="85" strokeWidth="0.5" strokeDasharray="8 12" className="hud-rotate-ccw origin-center" />
+            {/* Middle telemetry rings */}
+            <circle cx="100" cy="100" r="70" strokeWidth="0.35" strokeDasharray="30 6" className="hud-rotate-cw origin-center" />
+            <circle cx="100" cy="100" r="58" strokeWidth="0.35" strokeDasharray="1 5" className="hud-rotate-ccw origin-center" />
+            <circle cx="100" cy="100" r="42" strokeWidth="0.25" strokeDasharray="15 3" className="hud-rotate-cw origin-center" />
+            {/* Inner target cross */}
+            <line x1="100" y1="15" x2="100" y2="35" strokeWidth="0.35" />
+            <line x1="100" y1="165" x2="100" y2="185" strokeWidth="0.35" />
+            <line x1="15" y1="100" x2="35" y2="100" strokeWidth="0.35" />
+            <line x1="165" y1="100" x2="185" y2="100" strokeWidth="0.35" />
+          </svg>
+        </div>
+
+        {/* Scanlines & Grid overlays */}
+        <div className="absolute inset-0 opacity-[0.04] cyber-grid-overlay pointer-events-none z-0" />
+        <div className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay cyber-scanlines z-0" />
 
         {/* Ambient backglows */}
-        <div className="pointer-events-none absolute -top-40 left-1/2 h-[620px] w-[1100px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(2,132,199,0.12),transparent)] blur-3xl" />
-        <div className="pointer-events-none absolute top-40 -left-32 h-[420px] w-[420px] rounded-full bg-[radial-gradient(closest-side,rgba(124,58,237,0.08),transparent)] blur-3xl" />
+        <div className="pointer-events-none absolute -top-40 left-1/2 h-[720px] w-[1200px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,var(--color-primary),transparent)] opacity-[0.14] blur-3xl z-0" />
+        <div className="pointer-events-none absolute top-40 -left-32 h-[520px] w-[520px] rounded-full bg-[radial-gradient(closest-side,var(--color-secondary),transparent)] opacity-[0.09] blur-3xl z-0" />
+        <div className="pointer-events-none absolute bottom-0 right-10 h-[450px] w-[450px] rounded-full bg-[radial-gradient(closest-side,var(--color-primary),transparent)] opacity-[0.06] blur-3xl z-0" />
 
-        <div className="relative mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+        <div className="relative mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8 text-center flex flex-col items-center z-10">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -82,23 +102,29 @@ function MissionHQ() {
             className="mx-auto max-w-4xl text-center flex flex-col items-center"
           >
             {/* Status indicator badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3.5 py-1.5 text-xs text-muted-foreground backdrop-blur shadow-sm">
-              <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
+            <div 
+              style={{ fontFamily: "'Orbitron', sans-serif" }}
+              className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-[10px] font-bold text-primary tracking-[0.15em] uppercase backdrop-blur shadow-sm select-none"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse shadow-[0_0_8px_rgba(22,163,74,0.8)]" />
               Network Status: Nominal · 12 colonies connected
             </div>
 
             {/* Rotating gradient heading */}
-            <h1 className="mt-8 font-display text-4xl font-black leading-[1.1] tracking-tight sm:text-6xl md:text-7xl lg:text-[76px] text-foreground">
+            <h1 
+              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              className="mt-8 text-4xl font-black leading-[1.08] tracking-[-0.03em] sm:text-6xl md:text-7xl lg:text-[80px] text-foreground uppercase"
+            >
               Mission control for the
               <br />
-              <span className="relative inline-flex items-center justify-center w-full h-[48px] sm:h-[68px] md:h-[78px] lg:h-[84px] overflow-visible">
+              <span className="relative inline-flex items-center justify-center w-full h-[48px] sm:h-[68px] md:h-[78px] lg:h-[88px] overflow-visible">
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={wordIdx}
-                    initial={{ y: 20, opacity: 0, filter: "blur(5px)", rotateX: -60 }}
+                    initial={{ y: 24, opacity: 0, filter: "blur(6px)", rotateX: -70 }}
                     animate={{ y: 0, opacity: 1, filter: "blur(0px)", rotateX: 0 }}
-                    exit={{ y: -20, opacity: 0, filter: "blur(5px)", rotateX: 60 }}
-                    transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+                    exit={{ y: -24, opacity: 0, filter: "blur(6px)", rotateX: 70 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                     style={{
                       transformOrigin: "bottom center",
                       WebkitBackgroundClip: "text",
@@ -112,7 +138,11 @@ function MissionHQ() {
               </span>
             </h1>
 
-            <p className="mx-auto mt-8 max-w-2xl text-base sm:text-lg text-muted-foreground leading-relaxed">
+            {/* Description using Outfit font for high premium feel */}
+            <p 
+              style={{ fontFamily: "'Outfit', sans-serif" }}
+              className="mx-auto mt-8 max-w-2xl text-base sm:text-[17px] text-muted-foreground leading-relaxed font-light"
+            >
               OrbitChain unifies Ethereum settlement, Arbitrum throughput, and off-world nodes
               into a single telemetry surface. Watch every block, every trade, every colony —
               in real time.
