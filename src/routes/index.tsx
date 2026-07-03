@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
-  ArrowRight, Rocket, Wallet, Globe, Zap, Cpu, Radar,
+  ArrowRight, Rocket, Wallet, Globe, Zap, Cpu, Radar, ArrowUpRight,
+  ShieldCheck, Gauge, Layers,
 } from "lucide-react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { Starfield } from "@/components/Starfield";
@@ -20,14 +21,6 @@ export const Route = createFileRoute("/")({
   }),
   component: MissionHQ,
 });
-
-const modules = [
-  { icon: Wallet, title: "Wallet Satellite", desc: "Custody keys and sign transactions from any colony, offline-first." },
-  { icon: Globe, title: "Ethereum Planet", desc: "Settlement layer providing global consensus and finality." },
-  { icon: Zap, title: "Arbitrum Express", desc: "L2 rollup delivering sub-second transactions at fractional cost." },
-  { icon: Cpu, title: "Mining Reactor", desc: "Interactive proof-of-work simulator with real SHA-256 hashing." },
-  { icon: Radar, title: "Mission Control", desc: "Live telemetry across markets, gas, and network throughput." },
-];
 
 function MissionHQ() {
   return (
@@ -87,35 +80,102 @@ function MissionHQ() {
         <p className="mt-3 text-xs text-muted-foreground">Illustrative telemetry · simulation feed</p>
       </section>
 
-      {/* Modules */}
+      {/* Bento — Apple-style */}
       <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
         <div className="max-w-2xl">
           <div className="eyebrow">Mission Modules</div>
-          <h2 className="mt-2 text-3xl font-bold sm:text-4xl">Every subsystem, one console.</h2>
-          <p className="mt-3 text-muted-foreground">
-            Compose your operating picture from focused modules. Each speaks a common protocol
-            so operators can pivot from ledger settlement to hash telemetry in a single glance.
+          <h2 className="mt-2 font-display text-4xl font-bold tracking-tight sm:text-5xl">
+            Every subsystem.<br />
+            <span className="text-muted-foreground">One console.</span>
+          </h2>
+          <p className="mt-4 max-w-xl text-muted-foreground">
+            Purpose-built modules that snap together into a single operating picture — from
+            wallet custody to market telemetry to on-chain block production.
           </p>
         </div>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {modules.map((m, i) => (
-            <motion.div
-              key={m.title}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.35, delay: i * 0.05 }}
-              className="surface group p-6 transition-all hover:-translate-y-0.5 hover:border-primary/40"
-            >
-              <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <m.icon className="h-5 w-5" />
-              </div>
-              <h3 className="mt-4 text-lg font-semibold">{m.title}</h3>
-              <p className="mt-1.5 text-sm text-muted-foreground">{m.desc}</p>
-            </motion.div>
-          ))}
+
+        <div className="mt-12 grid gap-4 md:grid-cols-6 md:grid-rows-[repeat(4,minmax(160px,auto))]">
+          {/* Feature: Mission Control */}
+          <BentoCard
+            className="md:col-span-4 md:row-span-2"
+            eyebrow="Mission Control"
+            title="Live markets, one glance."
+            body="Streaming price feeds from Bitcoin, Ethereum, Arbitrum and Solana refresh every 45 seconds — with charts, top movers, and gas comparisons for every colony's operator."
+            href="/mission-control"
+            cta="Open dashboard"
+            tone="primary"
+          >
+            <MarketVisual />
+          </BentoCard>
+
+          {/* Ethereum */}
+          <BentoCard
+            className="md:col-span-2 md:row-span-2"
+            eyebrow="Layer 1"
+            title="Ethereum settles."
+            body="Global consensus, cryptographic finality — the base layer every colony trusts."
+            icon={Globe}
+          >
+            <Stat label="Validators securing L1" value="1M+" />
+          </BentoCard>
+
+          {/* Arbitrum */}
+          <BentoCard
+            className="md:col-span-2 md:row-span-2"
+            eyebrow="Layer 2"
+            title="Arbitrum scales."
+            body="Rollups batch thousands of transactions off-chain and post one proof back to Ethereum."
+            icon={Zap}
+          >
+            <div className="mt-4 space-y-2">
+              <MiniBar label="L1 fee" value="$3.20" width="100%" tone="muted" />
+              <MiniBar label="L2 fee" value="$0.04" width="14%" tone="primary" />
+            </div>
+          </BentoCard>
+
+          {/* Mining Reactor - large feature */}
+          <BentoCard
+            className="md:col-span-4 md:row-span-2"
+            eyebrow="Mining Reactor"
+            title="Real SHA-256, in your browser."
+            body="Mine chained blocks with the Web Crypto API, adjust difficulty, and watch the chain break the instant you tamper with history."
+            href="/mining-reactor"
+            cta="Enter reactor"
+            tone="secondary"
+          >
+            <HashVisual />
+          </BentoCard>
+
+          {/* Wallet */}
+          <BentoCard
+            className="md:col-span-2 md:row-span-1"
+            eyebrow="Custody"
+            title="Wallet Satellite"
+            body="Sign transactions offline. Public keys ship. Private keys stay planetside."
+            icon={Wallet}
+          />
+
+          {/* Reliability */}
+          <BentoCard
+            className="md:col-span-2 md:row-span-1"
+            eyebrow="Uptime"
+            title="99.98% synced"
+            body="Cross-colony consensus across 12 orbital nodes, four planetary anchors."
+            icon={ShieldCheck}
+          />
+
+          {/* Perf */}
+          <BentoCard
+            className="md:col-span-2 md:row-span-1"
+            eyebrow="Latency"
+            title="~250ms finality"
+            body="Sub-second confirmations on Arbitrum — before the next radar sweep."
+            icon={Gauge}
+          />
         </div>
       </section>
+
+
 
       {/* Why Layer 2 */}
       <section className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">
@@ -163,3 +223,141 @@ function Compare({ label, l1, l2 }: { label: string; l1: string; l2: string }) {
     </div>
   );
 }
+
+type BentoTone = "default" | "primary" | "secondary";
+function BentoCard({
+  className = "",
+  eyebrow,
+  title,
+  body,
+  icon: Icon,
+  href,
+  cta,
+  tone = "default",
+  children,
+}: {
+  className?: string;
+  eyebrow: string;
+  title: string;
+  body: string;
+  icon?: typeof Wallet;
+  href?: string;
+  cta?: string;
+  tone?: BentoTone;
+  children?: React.ReactNode;
+}) {
+  const bg =
+    tone === "primary"
+      ? "bg-gradient-to-br from-primary/15 via-card to-card border-primary/30"
+      : tone === "secondary"
+        ? "bg-gradient-to-br from-secondary/15 via-card to-card border-secondary/30"
+        : "bg-card";
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.4 }}
+      className={`group relative flex flex-col justify-between overflow-hidden rounded-3xl border p-6 sm:p-8 transition-all hover:-translate-y-0.5 ${bg} ${className}`}
+    >
+      <div>
+        <div className="flex items-center justify-between">
+          <div className="eyebrow">{eyebrow}</div>
+          {Icon && (
+            <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-foreground/5">
+              <Icon className="h-4 w-4 text-foreground/80" />
+            </div>
+          )}
+        </div>
+        <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h3>
+        <p className="mt-2 max-w-md text-sm text-muted-foreground sm:text-base">{body}</p>
+      </div>
+      {children && <div className="mt-6">{children}</div>}
+      {href && cta && (
+        <Link
+          to={href}
+          className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:gap-2 transition-all"
+        >
+          {cta} <ArrowUpRight className="h-4 w-4" />
+        </Link>
+      )}
+    </motion.div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="mt-4 flex items-baseline gap-3">
+      <span className="font-display text-4xl font-bold text-foreground sm:text-5xl">{value}</span>
+      <span className="text-xs text-muted-foreground">{label}</span>
+    </div>
+  );
+}
+
+function MiniBar({ label, value, width, tone }: { label: string; value: string; width: string; tone: "primary" | "muted" }) {
+  return (
+    <div>
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
+        <span>{label}</span>
+        <span className="font-mono">{value}</span>
+      </div>
+      <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-foreground/5">
+        <div
+          className={`h-full rounded-full ${tone === "primary" ? "bg-primary" : "bg-muted-foreground/50"}`}
+          style={{ width }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function MarketVisual() {
+  const rows = [
+    { name: "BTC", price: "$67,240", ch: "+2.14%", up: true },
+    { name: "ETH", price: "$3,482", ch: "+1.02%", up: true },
+    { name: "ARB", price: "$0.821", ch: "-0.45%", up: false },
+    { name: "SOL", price: "$174.20", ch: "+3.87%", up: true },
+  ];
+  return (
+    <div className="rounded-2xl border border-border/60 bg-background/60 p-4 backdrop-blur">
+      <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground">
+        <span className="inline-flex items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
+          Live feed
+        </span>
+        <span className="font-mono">CoinGecko · 45s</span>
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        {rows.map((r) => (
+          <div key={r.name} className="rounded-xl bg-foreground/5 p-3">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-semibold">{r.name}</span>
+              <span className={`font-mono ${r.up ? "text-success" : "text-destructive"}`}>{r.ch}</span>
+            </div>
+            <div className="mt-1 font-mono text-sm font-semibold">{r.price}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function HashVisual() {
+  return (
+    <div className="rounded-2xl border border-border/60 bg-background/60 p-4 font-mono text-xs backdrop-blur">
+      <div className="flex items-center justify-between text-muted-foreground">
+        <span className="eyebrow">Block #2</span>
+        <span className="inline-flex items-center gap-1.5 text-success">
+          <Layers className="h-3 w-3" /> Valid
+        </span>
+      </div>
+      <div className="mt-3 space-y-1.5">
+        <div className="truncate text-secondary">000a4f2b91e7d3c85b6a2f19d8e0c47a5b3f6...</div>
+        <div className="truncate text-muted-foreground">nonce · 48,271</div>
+        <div className="h-px bg-border/60" />
+        <div className="truncate text-primary">0009c1de8ab72f45e63d9c1a7b40e2f8c5d3...</div>
+      </div>
+    </div>
+  );
+}
+
