@@ -8,6 +8,20 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { Starfield } from "@/components/Starfield";
 import { StatCounter } from "@/components/StatCounter";
 
+export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "OrbitChain — Mission Control for the Interplanetary Web3 Economy" },
+      { name: "description", content: "OrbitChain is the visualization and monitoring layer for a decentralized, interplanetary financial network built on Ethereum and Arbitrum." },
+      { property: "og:title", content: "OrbitChain — Mission Control for Web3" },
+      { property: "og:description", content: "Monitor validators, mine blocks, and track markets across every colony." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  component: MissionHQ,
+});
+
 function MissionHQ() {
   return (
     <SiteLayout>
