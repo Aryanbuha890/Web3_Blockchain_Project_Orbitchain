@@ -9,8 +9,32 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as MissionControlRouteImport } from './routes/mission-control'
+import { Route as MiningReactorRouteImport } from './routes/mining-reactor'
+import { Route as GalaxyRouteImport } from './routes/galaxy'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MissionControlRoute = MissionControlRouteImport.update({
+  id: '/mission-control',
+  path: '/mission-control',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MiningReactorRoute = MiningReactorRouteImport.update({
+  id: '/mining-reactor',
+  path: '/mining-reactor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GalaxyRoute = GalaxyRouteImport.update({
+  id: '/galaxy',
+  path: '/galaxy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +43,83 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/galaxy': typeof GalaxyRoute
+  '/mining-reactor': typeof MiningReactorRoute
+  '/mission-control': typeof MissionControlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/galaxy': typeof GalaxyRoute
+  '/mining-reactor': typeof MiningReactorRoute
+  '/mission-control': typeof MissionControlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/galaxy': typeof GalaxyRoute
+  '/mining-reactor': typeof MiningReactorRoute
+  '/mission-control': typeof MissionControlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/galaxy'
+    | '/mining-reactor'
+    | '/mission-control'
+    | '/sitemap.xml'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/galaxy' | '/mining-reactor' | '/mission-control' | '/sitemap.xml'
+  id:
+    | '__root__'
+    | '/'
+    | '/galaxy'
+    | '/mining-reactor'
+    | '/mission-control'
+    | '/sitemap.xml'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GalaxyRoute: typeof GalaxyRoute
+  MiningReactorRoute: typeof MiningReactorRoute
+  MissionControlRoute: typeof MissionControlRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mission-control': {
+      id: '/mission-control'
+      path: '/mission-control'
+      fullPath: '/mission-control'
+      preLoaderRoute: typeof MissionControlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mining-reactor': {
+      id: '/mining-reactor'
+      path: '/mining-reactor'
+      fullPath: '/mining-reactor'
+      preLoaderRoute: typeof MiningReactorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/galaxy': {
+      id: '/galaxy'
+      path: '/galaxy'
+      fullPath: '/galaxy'
+      preLoaderRoute: typeof GalaxyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +132,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GalaxyRoute: GalaxyRoute,
+  MiningReactorRoute: MiningReactorRoute,
+  MissionControlRoute: MissionControlRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
