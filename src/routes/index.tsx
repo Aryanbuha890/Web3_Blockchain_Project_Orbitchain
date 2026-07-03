@@ -1,33 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
-  ArrowRight, Rocket, Wallet, Globe, Zap, Cpu, Radar,
+  ArrowRight, Rocket, Wallet, Globe, Zap, Cpu, Radar, ArrowUpRight,
+  ShieldCheck, Gauge, Layers,
 } from "lucide-react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { Starfield } from "@/components/Starfield";
 import { StatCounter } from "@/components/StatCounter";
-
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "OrbitChain — Mission Control for the Interplanetary Web3 Economy" },
-      { name: "description", content: "OrbitChain is the visualization and monitoring layer for a decentralized, interplanetary financial network built on Ethereum and Arbitrum." },
-      { property: "og:title", content: "OrbitChain — Mission Control for Web3" },
-      { property: "og:description", content: "Monitor validators, mine blocks, and track markets across every colony." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: MissionHQ,
-});
-
-const modules = [
-  { icon: Wallet, title: "Wallet Satellite", desc: "Custody keys and sign transactions from any colony, offline-first." },
-  { icon: Globe, title: "Ethereum Planet", desc: "Settlement layer providing global consensus and finality." },
-  { icon: Zap, title: "Arbitrum Express", desc: "L2 rollup delivering sub-second transactions at fractional cost." },
-  { icon: Cpu, title: "Mining Reactor", desc: "Interactive proof-of-work simulator with real SHA-256 hashing." },
-  { icon: Radar, title: "Mission Control", desc: "Live telemetry across markets, gas, and network throughput." },
-];
 
 function MissionHQ() {
   return (
