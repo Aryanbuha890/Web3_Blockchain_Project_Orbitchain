@@ -226,8 +226,8 @@ function MissionControl() {
                 <AreaChart data={chart} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="priceFill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="oklch(0.72 0.16 235)" stopOpacity={0.4} />
-                      <stop offset="100%" stopColor="oklch(0.72 0.16 235)" stopOpacity={0} />
+                      <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.4} />
+                      <stop offset="100%" stopColor="var(--primary)" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <XAxis
@@ -238,28 +238,29 @@ function MissionControl() {
                         ? d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
                         : d.toLocaleDateString([], { month: "short", day: "numeric" });
                     }}
-                    stroke="oklch(0.55 0.02 260)"
+                    stroke="var(--muted-foreground)"
                     fontSize={11}
                     minTickGap={40}
                   />
                   <YAxis
                     domain={["auto", "auto"]}
-                    stroke="oklch(0.55 0.02 260)"
+                    stroke="var(--muted-foreground)"
                     fontSize={11}
                     tickFormatter={(v) => `$${Number(v).toLocaleString(undefined, { maximumFractionDigits: 0 })}`}
                     width={70}
                   />
                   <Tooltip
                     contentStyle={{
-                      background: "oklch(0.19 0.025 260)",
-                      border: "1px solid oklch(1 0 0 / 0.1)",
+                      background: "var(--card)",
+                      border: "1px solid var(--border)",
                       borderRadius: 8,
                       fontSize: 12,
+                      color: "var(--foreground)",
                     }}
                     labelFormatter={(t) => new Date(t as number).toLocaleString()}
                     formatter={(v: number) => [`$${v.toLocaleString(undefined, { maximumFractionDigits: 2 })}`, "Price"]}
                   />
-                  <Area type="monotone" dataKey="p" stroke="oklch(0.72 0.16 235)" strokeWidth={2} fill="url(#priceFill)" />
+                  <Area type="monotone" dataKey="p" stroke="var(--primary)" strokeWidth={2} fill="url(#priceFill)" />
                 </AreaChart>
               </ResponsiveContainer>
             )}

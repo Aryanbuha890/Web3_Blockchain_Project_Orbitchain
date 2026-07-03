@@ -38,6 +38,33 @@
 
 :root {
   --radius: 0.75rem;
+  
+  /* Portmind-inspired Light Mode */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #0284c7;
+  --primary-foreground: #ffffff;
+  --secondary: #7c3aed;
+  --secondary-foreground: #ffffff;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --success: #16a34a;
+  --success-foreground: #ffffff;
+  --border: #e2e8f0;
+  --input: #f1f5f9;
+  --ring: #0284c7;
+}
+
+.dark {
+  /* OrbitChain Dark Mode */
   --background: oklch(0.14 0.02 260);
   --foreground: oklch(0.97 0.005 260);
   --card: oklch(0.19 0.025 260);
@@ -66,8 +93,11 @@
     border-color: var(--color-border);
   }
   html {
-    color-scheme: dark;
+    color-scheme: light;
     background-color: var(--color-background);
+  }
+  html.dark {
+    color-scheme: dark;
   }
   body {
     background-color: var(--color-background);
@@ -75,11 +105,34 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     background-image:
+      radial-gradient(ellipse 80% 60% at 50% -10%, oklch(0.55 0.18 235 / 0.08), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 100%, oklch(0.48 0.19 295 / 0.04), transparent 60%);
+    background-attachment: fixed;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  html.dark body {
+    background-image:
       radial-gradient(ellipse 80% 60% at 50% -10%, oklch(0.72 0.16 235 / 0.15), transparent 60%),
       radial-gradient(ellipse 60% 40% at 90% 100%, oklch(0.62 0.19 295 / 0.08), transparent 60%);
-    background-attachment: fixed;
   }
   h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
+
+  /* Smooth scrollbars matching theme */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-background);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 9999px;
+    border: 2.5px solid var(--color-background);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-muted-foreground);
+  }
 }
 
 @utility eyebrow {
@@ -97,7 +150,7 @@
 }
 
 @utility glow-primary {
-  box-shadow: 0 0 0 1px oklch(0.72 0.16 235 / 0.3), 0 10px 40px -10px oklch(0.72 0.16 235 / 0.4);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-primary) 30%, transparent), 0 10px 40px -10px color-mix(in srgb, var(--color-primary) 40%, transparent);
 }
 
 @keyframes starfield-drift {
@@ -109,7 +162,7 @@
   100% { background-position: 200% 0; }
 }
 @utility skeleton-shimmer {
-  background: linear-gradient(90deg, var(--color-muted) 0%, oklch(0.3 0.02 260) 50%, var(--color-muted) 100%);
+  background: linear-gradient(90deg, var(--color-muted) 0%, var(--color-accent) 50%, var(--color-muted) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.8s ease-in-out infinite;
 }

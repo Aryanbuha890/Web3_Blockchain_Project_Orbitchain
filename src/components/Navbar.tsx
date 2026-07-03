@@ -1,6 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Menu, X, Orbit } from "lucide-react";
+import { Menu, X, Orbit, Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
@@ -13,6 +13,7 @@ const links = [
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   useEffect(() => {
@@ -21,6 +22,22 @@ export function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    const isDark = document.documentElement.classList.contains("dark");
+    setTheme(isDark ? "dark" : "light");
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    if (nextTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("theme", nextTheme);
+    setTheme(nextTheme);
+  };
 
   return (
     <div className="sticky top-0 z-50 flex justify-center px-3 pt-3 sm:px-6">
@@ -68,7 +85,22 @@ export function Navbar() {
             })}
           </nav>
 
-          <div className="hidden md:block">
+          {/* Desktop Mode Theme Toggle and Launch Button */}
+          <div className="hidden md:flex md:items-center md:gap-3">
+            <button
+              onClick={toggleTheme}
+              className={cn(
+                "inline-flex shrink-0 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-all hover:bg-muted hover:text-foreground cursor-pointer shadow-sm",
+                scrolled ? "h-7 w-7" : "h-9 w-9",
+              )}
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? (
+                <Sun className={cn("transition-all", scrolled ? "h-3.5 w-3.5" : "h-4.5 w-4.5")} />
+              ) : (
+                <Moon className={cn("transition-all", scrolled ? "h-3.5 w-3.5" : "h-4.5 w-4.5")} />
+              )}
+            </button>
             <Link
               to="/mission-control"
               className={cn(
@@ -80,13 +112,23 @@ export function Navbar() {
             </Link>
           </div>
 
-          <button
-            className="rounded-full p-2 text-muted-foreground md:hidden"
-            onClick={() => setOpen((o) => !o)}
-            aria-label="Toggle menu"
-          >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          {/* Mobile Theme Toggle and Menu Toggle */}
+          <div className="flex items-center gap-1 md:hidden">
+            <button
+              onClick={toggleTheme}
+              className="rounded-full p-2 text-muted-foreground hover:text-foreground cursor-pointer"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
+            <button
+              className="rounded-full p-2 text-muted-foreground cursor-pointer"
+              onClick={() => setOpen((o) => !o)}
+              aria-label="Toggle menu"
+            >
+              {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
 
         {open && (
