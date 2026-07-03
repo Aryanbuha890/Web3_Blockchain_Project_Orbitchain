@@ -9,9 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as MissionControlRouteImport } from './routes/mission-control'
+import { Route as MiningReactorRouteImport } from './routes/mining-reactor'
 import { Route as GalaxyRouteImport } from './routes/galaxy'
 import { Route as IndexRouteImport } from './routes/index'
 
+const MissionControlRoute = MissionControlRouteImport.update({
+  id: '/mission-control',
+  path: '/mission-control',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MiningReactorRoute = MiningReactorRouteImport.update({
+  id: '/mining-reactor',
+  path: '/mining-reactor',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GalaxyRoute = GalaxyRouteImport.update({
   id: '/galaxy',
   path: '/galaxy',
@@ -26,31 +38,53 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/galaxy': typeof GalaxyRoute
+  '/mining-reactor': typeof MiningReactorRoute
+  '/mission-control': typeof MissionControlRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/galaxy': typeof GalaxyRoute
+  '/mining-reactor': typeof MiningReactorRoute
+  '/mission-control': typeof MissionControlRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/galaxy': typeof GalaxyRoute
+  '/mining-reactor': typeof MiningReactorRoute
+  '/mission-control': typeof MissionControlRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/galaxy'
+  fullPaths: '/' | '/galaxy' | '/mining-reactor' | '/mission-control'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/galaxy'
-  id: '__root__' | '/' | '/galaxy'
+  to: '/' | '/galaxy' | '/mining-reactor' | '/mission-control'
+  id: '__root__' | '/' | '/galaxy' | '/mining-reactor' | '/mission-control'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GalaxyRoute: typeof GalaxyRoute
+  MiningReactorRoute: typeof MiningReactorRoute
+  MissionControlRoute: typeof MissionControlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/mission-control': {
+      id: '/mission-control'
+      path: '/mission-control'
+      fullPath: '/mission-control'
+      preLoaderRoute: typeof MissionControlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mining-reactor': {
+      id: '/mining-reactor'
+      path: '/mining-reactor'
+      fullPath: '/mining-reactor'
+      preLoaderRoute: typeof MiningReactorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/galaxy': {
       id: '/galaxy'
       path: '/galaxy'
@@ -71,6 +105,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GalaxyRoute: GalaxyRoute,
+  MiningReactorRoute: MiningReactorRoute,
+  MissionControlRoute: MissionControlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
