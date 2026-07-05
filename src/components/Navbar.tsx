@@ -63,7 +63,7 @@ export function Navbar() {
         className={cn(
           "relative mx-auto flex items-center justify-between rounded-full border backdrop-blur-2xl transition-shadow duration-300",
           theme === "dark"
-            ? "border-white/10 bg-slate-950/70 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.7),inset_0_1px_0_0_rgba(255,255,255,0.1),inset_0_-1px_0_0_rgba(255,255,255,0.02)]"
+            ? "border-white/15 bg-slate-950/75 shadow-[0_20px_60px_-20px_rgba(2,6,23,0.85),inset_0_1px_0_0_rgba(255,255,255,0.18),inset_0_-1px_0_0_rgba(255,255,255,0.04)]"
             : "border-slate-200/80 bg-white/75 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.1),inset_0_1px_0_0_rgba(255,255,255,0.6)]"
         )}
       >
@@ -73,17 +73,34 @@ export function Navbar() {
           className="pointer-events-none absolute inset-x-5 top-0 h-1/2 rounded-t-full opacity-60"
           style={{
             background:
-              "linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%)",
+              "linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 100%)",
           }}
         />
 
         {/* Soft colorful background glow */}
         <span
           aria-hidden
-          className="pointer-events-none absolute inset-0 rounded-full opacity-30"
+          className="pointer-events-none absolute inset-0 rounded-full opacity-60"
           style={{
-            background:
-              "radial-gradient(120% 80% at 10% 0%, rgba(2,132,199,0.15) 0%, rgba(2,132,199,0) 55%), radial-gradient(120% 80% at 90% 100%, rgba(124,58,237,0.12) 0%, rgba(124,58,237,0) 55%)",
+            background: theme === "dark"
+              ? "radial-gradient(120% 80% at 10% 0%, rgba(56,189,248,0.18) 0%, rgba(56,189,248,0) 55%), radial-gradient(120% 80% at 90% 100%, rgba(124,58,237,0.15) 0%, rgba(124,58,237,0) 55%)"
+              : "radial-gradient(120% 80% at 10% 0%, rgba(2,132,199,0.08) 0%, rgba(2,132,199,0) 55%), radial-gradient(120% 80% at 90% 100%, rgba(124,58,237,0.06) 0%, rgba(124,58,237,0) 55%)",
+          }}
+        />
+
+        {/* Gradient border ring */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -inset-px rounded-full"
+          style={{
+            background: theme === "dark"
+              ? "linear-gradient(120deg, rgba(56,189,248,0.55), rgba(124,58,237,0.4), rgba(99,102,241,0.5))"
+              : "linear-gradient(120deg, rgba(2,132,199,0.45), rgba(124,58,237,0.3), rgba(2,132,199,0.3))",
+            WebkitMask: "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
+            WebkitMaskComposite: "xor",
+            maskComposite: "exclude",
+            padding: 1,
+            opacity: scrolled ? 0.85 : 0.4,
           }}
         />
 

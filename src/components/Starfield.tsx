@@ -1,12 +1,20 @@
+import { useEffect, useState } from "react";
+
 export function Starfield() {
-  const stars = Array.from({ length: 60 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 1.6 + 0.4,
-    opacity: Math.random() * 0.6 + 0.2,
-    delay: Math.random() * 4,
-  }));
+  const [stars, setStars] = useState<{ id: number; x: number; y: number; size: number; opacity: number; delay: number }[]>([]);
+
+  useEffect(() => {
+    const generated = Array.from({ length: 60 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 1.6 + 0.4,
+      opacity: Math.random() * 0.6 + 0.2,
+      delay: Math.random() * 4,
+    }));
+    setStars(generated);
+  }, []);
+
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
       {stars.map((s) => (
